@@ -24,14 +24,15 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` 
     ros-kinetic-joy \
  && apt-get clean
 
-
-RUN mkdir -p /tmp/workspace/src
-COPY prius_description /tmp/workspace/src/prius_description
-COPY prius_msgs /tmp/workspace/src/prius_msgs
-COPY car_demo /tmp/workspace/src/car_demo
-RUN /bin/bash -c 'cd /tmp/workspace \
+# edited by ws
+RUN mkdir -p /workspace/src
+COPY prius_description /workspace/src/prius_description
+COPY prius_msgs /workspace/src/prius_msgs
+COPY car_demo /workspace/src/car_demo
+RUN /bin/bash -c 'cd /workspace \
  && source /opt/ros/kinetic/setup.bash \
  && catkin_make'
 
 
-CMD ["/bin/bash", "-c", "source /opt/ros/kinetic/setup.bash && source /tmp/workspace/devel/setup.bash && roslaunch car_demo demo.launch"]
+#CMD ["/bin/bash", "-c", "source /opt/ros/kinetic/setup.bash && source /workspace/devel/setup.bash"]
+#&& roslaunch car_demo demo.launch

@@ -56,3 +56,12 @@ If using a Logitech F710 controller:
 * Y puts the car into DRIVE
 * A puts the car into REVERSE
 * B puts the car into NEUTRAL
+
+
+
+#### 测试记录
+
+1. demo.launch 给完一个油门会保持速度，松开刹车后也会继续前进
+2. 自动控制节点和遥控控制节点同时启动会收到两个速度，导致车速较慢
+3. 使用monitor节点和自动控制节点车速较快，（貌似是一直加速？）油门给的是加速度？
+4. 自动控制也是刹车始终给才会停下，不然车会一直前进, 如何让车停下？

@@ -40,4 +40,7 @@ sudo nvidia-docker run -it \
   -v "/dev/input:/dev/input" \
   --privileged \
   --rm=true \
+  --name=carsim \
+  --env ROS_HOSTNAME=172.17.0.2 \
+  --env ROS_MASTER_URI=http://192.168.31.253:11311 \
   osrf/car_demo
