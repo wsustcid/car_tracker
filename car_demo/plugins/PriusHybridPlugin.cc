@@ -313,8 +313,13 @@ PriusHybridPlugin::PriusHybridPlugin()
 
 void PriusHybridPlugin::OnPriusCommand(const prius_msgs::Control::ConstPtr &msg)
 {
+#if GAZEBO_MAJOR_VERSION >= 8
   this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
   this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#else
+  this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->GetSimTime();
+  this->dataPtr->lastPedalCmdTime = this->dataPtr->world->GetSimTime();
+#endif  
 
   // Steering wheel command
   double handCmd = (msg->steer < 0.)
@@ -677,9 +682,13 @@ void PriusHybridPlugin::OnCmdVel(const ignition::msgs::Pose &_msg)
   this->dataPtr->gasPedalPercent = std::min(_msg.position().x(), 1.0);
   this->dataPtr->handWheelCmd = _msg.position().y();
   this->dataPtr->brakePedalPercent = _msg.position().z();
-
+#if GAZEBO_MAJOR_VERSION >=8 
   this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
   this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#else
+  this->dataPtr->lastPedalCmdTime = this->dataPtr->world->GetSimTime();
+  this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->GetSimTime();
+#endif
 }
 /////////////////////////////////////////////////
 void PriusHybridPlugin::OnCmdGear(const ignition::msgs::Int32 &_msg)
@@ -717,7 +726,11 @@ void PriusHybridPlugin::KeyControlTypeA(const int _key)
       this->dataPtr->gasPedalPercent += 0.1;
       this->dataPtr->gasPedalPercent =
           std::min(this->dataPtr->gasPedalPercent, 1.0);
-      this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // w - release pedals
@@ -726,7 +739,11 @@ void PriusHybridPlugin::KeyControlTypeA(const int _key)
     {
       this->dataPtr->brakePedalPercent = 0.0;
       this->dataPtr->gasPedalPercent = 0.0;
-      this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // q - brake
@@ -736,7 +753,11 @@ void PriusHybridPlugin::KeyControlTypeA(const int _key)
       this->dataPtr->brakePedalPercent += 0.1;
       this->dataPtr->brakePedalPercent =
           std::min(this->dataPtr->brakePedalPercent, 1.0);
-      this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // a - steer left
@@ -746,7 +767,11 @@ void PriusHybridPlugin::KeyControlTypeA(const int _key)
       this->dataPtr->handWheelCmd += 0.25;
       this->dataPtr->handWheelCmd = std::min(this->dataPtr->handWheelCmd,
           this->dataPtr->handWheelHigh);
-      this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // d - steer right
@@ -756,7 +781,11 @@ void PriusHybridPlugin::KeyControlTypeA(const int _key)
       this->dataPtr->handWheelCmd -= 0.25;
       this->dataPtr->handWheelCmd = std::max(this->dataPtr->handWheelCmd,
           this->dataPtr->handWheelLow);
-      this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // s - center steering
@@ -764,7 +793,11 @@ void PriusHybridPlugin::KeyControlTypeA(const int _key)
     case 115:
     {
       this->dataPtr->handWheelCmd = 0;
-      this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // z reverse
@@ -815,7 +848,11 @@ void PriusHybridPlugin::KeyControlTypeB(const int _key)
       this->dataPtr->gasPedalPercent =
           std::min(this->dataPtr->gasPedalPercent, 1.0);
       this->dataPtr->directionState = PriusHybridPluginPrivate::FORWARD;
-      this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // a - steer left
@@ -825,7 +862,11 @@ void PriusHybridPlugin::KeyControlTypeB(const int _key)
       this->dataPtr->handWheelCmd += 0.25;
       this->dataPtr->handWheelCmd = std::min(this->dataPtr->handWheelCmd,
           this->dataPtr->handWheelHigh);
-      this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // s - reverse
@@ -839,7 +880,11 @@ void PriusHybridPlugin::KeyControlTypeB(const int _key)
       this->dataPtr->gasPedalPercent =
           std::min(this->dataPtr->gasPedalPercent, 1.0);
       this->dataPtr->directionState = PriusHybridPluginPrivate::REVERSE;
-      this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // d - steer right
@@ -849,7 +894,11 @@ void PriusHybridPlugin::KeyControlTypeB(const int _key)
       this->dataPtr->handWheelCmd -= 0.25;
       this->dataPtr->handWheelCmd = std::max(this->dataPtr->handWheelCmd,
           this->dataPtr->handWheelLow);
-      this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastSteeringCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // e brake
@@ -858,7 +907,11 @@ void PriusHybridPlugin::KeyControlTypeB(const int _key)
     {
       this->dataPtr->brakePedalPercent = 1.0;
       this->dataPtr->gasPedalPercent = 0.0;
-      this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->SimTime();
+#else
+    this->dataPtr->lastPedalCmdTime = this->dataPtr->world->GetSimTime();
+#endif
       break;
     }
     // x neutral
@@ -873,7 +926,11 @@ void PriusHybridPlugin::KeyControlTypeB(const int _key)
     case 113:
     {
       // avoid rapid mode changes due to repeated key press
-      common::Time now = this->dataPtr->world->SimTime();
+#if GAZEBO_MAJOR_VERSION >= 8
+    common::Time now = this->dataPtr->world->SimTime();
+#else
+    common::Time now = this->dataPtr->world->GetSimTime();
+#endif
       if ((now - this->dataPtr->lastModeCmdTime).Double() > 0.3)
       {
         this->dataPtr->evMode = !this->dataPtr->evMode;
@@ -975,8 +1032,11 @@ void PriusHybridPlugin::Update()
   PriusHybridPluginPrivate *dPtr = this->dataPtr.get();
 
   std::lock_guard<std::mutex> lock(this->dataPtr->mutex);
-
+#if GAZEBO_MAJOR_VERSION >= 8
   common::Time curTime = this->dataPtr->world->SimTime();
+#else
+  common::Time curTime = this->dataPtr->world->GetSimTime();
+#endif
   double dt = (curTime - this->dataPtr->lastSimTime).Double();
   if (dt < 0)
   {
@@ -1247,9 +1307,13 @@ void PriusHybridPlugin::Update()
 
   if ((curTime - this->dataPtr->lastMsgTime) > .5)
   {
+#if GAZEBO_MAJOR_VERSION >= 8
     this->dataPtr->posePub.Publish(
         ignition::msgs::Convert(this->dataPtr->model->WorldPose()));
-
+#else
+    this->dataPtr->posePub.Publish(
+        ignition::msgs::Convert(this->dataPtr->model->GetWorldPose().Ign()));
+#endif    
     ignition::msgs::Double_V consoleMsg;
 
     // linearVel (meter/sec) = (2*PI*r) * (rad/sec).
@@ -1292,9 +1356,13 @@ void PriusHybridPlugin::Update()
     this->dataPtr->consolePub.Publish(consoleMsg);
 
     // Output prius car data.
+#if GAZEBO_MAJOR_VERSION >= 8
     this->dataPtr->posePub.Publish(
         ignition::msgs::Convert(this->dataPtr->model->WorldPose()));
-
+#else
+    this->dataPtr->posePub.Publish(
+        ignition::msgs::Convert(this->dataPtr->model->GetWorldPose().Ign()));
+#endif
     this->dataPtr->lastMsgTime = curTime;
   }
 
